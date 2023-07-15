@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -24,6 +27,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function checkLogin(LoginRequest $request){
+
+        $user = User::where('email',$request->email)->where('password',$request->password)->first();
+        if ($user){
+            return redirect(route('category-list'))->with('success','Login Successfully.');
+        }else{
+            return redirect(route('Login'))->with('error','Email or Password is invalid. Try again.');
+        }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -48,7 +60,12 @@ class UserController extends Controller
             'email'=>$request->email,
             'password'=>$request->password,
         ]);
-        return redirect()->route('Login');
+        if ($register){
+            return redirect(route('Login'))->with('success','Registration Success.');
+        }else{
+            return redirect(route('registration'))->with('error','Something went wrong.Try again.');
+        }
+
     }
 
     /**
@@ -94,5 +111,11 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function logout(){
+        Session::flush();
+        Auth::logout();
+        return redirect(route('Login'));
     }
 }

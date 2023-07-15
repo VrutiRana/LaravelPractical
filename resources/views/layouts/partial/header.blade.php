@@ -14,5 +14,9 @@
                 </li>
             </ul>
         </div>
+
+        <div>
+            <a href="{{route('logout')}}" class="btn btn-primary"> Logout </a>
+        </div>
     </div>
 </nav>

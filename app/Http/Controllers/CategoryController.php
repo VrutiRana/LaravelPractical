@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('category/list');
+        $category = Category::all();
+        return view('category/list',['category'=>$category]);
     }
 
     /**
@@ -23,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('category/add');
     }
 
     /**
@@ -32,9 +35,17 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $addCategory = Category::insert([
+            'name'=>$request->name,
+            'description'=>$request->description,
+        ]);
+        if ($addCategory){
+            return redirect(route('category-list'))->with('success','Category Added Successfully.');
+        }else{
+            return redirect(route('add-category'))->with('error','Something went wrong. Try again.');
+        }
     }
 
     /**
@@ -56,7 +67,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::findorfail($id);
+        return view('category/edit',['category'=>$category]);
     }
 
     /**
@@ -68,7 +80,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $editCategory = Category::where('id',$id)->update([
+            'name'=>$request->name,
+            'description'=>$request->description,
+        ]);
+        if ($editCategory){
+            return redirect(route('category-list'))->with('success','Category Updated Successfully.');
+        }else{
+            return redirect(route('add-category'))->with('error','Something went wrong. Try again.');
+        }
     }
 
     /**
@@ -79,6 +99,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deleteCategory = Category::where('id',$id)->delete();
+        if ($deleteCategory){
+            return redirect(route('category-list'))->with('success','Category Deleted Successfully.');
+        }else{
+            return redirect(route('add-category'))->with('error','Something went wrong. Try again.');
+        }
     }
 }

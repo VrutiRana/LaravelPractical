@@ -2,6 +2,20 @@
 @section('title','Registration')
 @section('content')
     <div class="container">
+            @if(session()->has('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">{{session('error')}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+            @if(session()->has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">{{session('success')}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <form class="ms-auto me-auto mt-auto" style="width: 500px" method="post" action="{{route('register')}}">
                @csrf
                 <div class="mb-3">
@@ -24,16 +38,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="text" name="password" class="form-control" id="Password">
+                    <input type="password" name="password" class="form-control" id="Password">
                     <div class="col-sm-6">
                         @if($errors->has('password'))
                             <div class="error" style="color: red">{{ $errors->first('password') }}</div>
                         @endif
                     </div>
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <a href="{{route('Login')}}" type="submit" class="btn btn-primary">Cancel</a>
