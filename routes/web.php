@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\UserController::class,'index'])->name('Login');
+Route::post('/login', [\App\Http\Controllers\UserController::class,'index'])->name('checkLogin');
+Route::get('/registration', [\App\Http\Controllers\UserController::class,'create'])->name('registration');
+Route::post('/register', [\App\Http\Controllers\UserController::class,'store'])->name('register');
+Route::get('/category', [\App\Http\Controllers\CategoryController::class,'index'])->name('category-list');
